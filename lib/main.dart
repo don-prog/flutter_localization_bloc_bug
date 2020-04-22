@@ -13,22 +13,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
 
-  runApp(BlocProvider<MainBloc>.value(
-      value: di.sl()..add(ReadyEvent()),
-      child: MyApp()
-  ));
+  runApp(
+    BlocProvider<MainBloc>(
+      create: (_) => di.sl.get<MainBloc>()..add(ReadyEvent()),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
-
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
 //  MainBloc _mainBloc;
-  final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
 
 //  @override
 //  void initState() {
@@ -63,16 +64,16 @@ class _MyAppState extends State<MyApp> {
               break;
             }
           }
-          if(usedLocale == null)
-            usedLocale = supportedLocales.first;
+          if (usedLocale == null) usedLocale = supportedLocales.first;
           return usedLocale;
         },
         home: Scaffold(
           body: BlocListener<MainBloc, MainState>(
-            listener: (context, state){
-              if(state is ReadyState){
+            listener: (context, state) {
+              if (state is ReadyState) {
                 print('Go to first_page');
-                rootNavigatorKey.currentState.pushNamedAndRemoveUntil("first_page", (r) => false);
+                rootNavigatorKey.currentState
+                    .pushNamedAndRemoveUntil("first_page", (r) => false);
               }
             },
             child: Navigator(
@@ -81,7 +82,6 @@ class _MyAppState extends State<MyApp> {
               onGenerateRoute: RouteGenerator.generateRoute,
             ),
           ),
-        )
-    );
+        ));
   }
 }
