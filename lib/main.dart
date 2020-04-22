@@ -5,13 +5,19 @@ import 'package:flutter_localization_bloc_bug/bloc/main_event.dart';
 import 'package:flutter_localization_bloc_bug/bloc/main_state.dart';
 import 'package:flutter_localization_bloc_bug/route_generator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localization_bloc_bug/injection_container.dart' as di;
 
 import 'app_localizations.dart';
 
-void main() => runApp(BlocProvider<MainBloc>(
-    create: (_) => MainBloc(),
-    child: MyApp()
-));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
+
+  runApp(BlocProvider<MainBloc>.value(
+      value: di.sl()..add(ReadyEvent()),
+      child: MyApp()
+  ));
+}
 
 class MyApp extends StatefulWidget {
 
@@ -21,16 +27,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  MainBloc _mainBloc;
+//  MainBloc _mainBloc;
   final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
-  @override
-  void initState() {
-    super.initState();
-
-    _mainBloc = BlocProvider.of<MainBloc>(context);
-    _mainBloc.add(ReadyEvent());
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//
+//    _mainBloc = BlocProvider.of<MainBloc>(context);
+//    _mainBloc.add(ReadyEvent());
+//  }
 
   @override
   Widget build(BuildContext context) {
